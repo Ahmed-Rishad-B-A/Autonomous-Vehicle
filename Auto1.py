@@ -13,18 +13,21 @@ time.sleep(0.1)
 imag=cv.imread("road.jpg")
 imag=cv.resize(imag,(320,240) , interpolation = cv.INTER_AREA)
 
-# for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
-#     # grab the raw NumPy array representing the image, then initialize the timestamp
-#     # and occupied/unoccupied text
-#     image = frame.array
-#     image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-#     cv.namedWindow("imagewin", cv.WINDOW_KEEPRATIO)
-#     cv.resizeWindow("imagewin", 1280, 720)
-#     cv.imshow("imagewin", image)
-#     key = cv.waitKey(1) & 0xFF
-#     # clear the stream in preparation for the next frame
-#     rawCapture.truncate(0)
-#      # if the `q` key was pressed, break from the loo
+for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+    #grab the raw NumPy array representing the image, then initialize the timestamp  # and occupied/unoccupied text
+    image = frame.array
+    image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
+    cv.namedWindow("imagewin2", cv.WINDOW_KEEPRATIO)
+    cv.resizeWindow("imagewin2", 1280, 720)
+    cv.imshow("imagewin2", image)
+    key = cv.waitKey(1) & 0xFF
+    print(key)
+    if key==ord('q'):
+        cv.destroyWindow("imagewin2")
+        break
+     # clear the stream in preparation for the next frame
+    rawCapture.truncate(0)
+    # if the `q` key was pressed, break from the loo
 
 points1= [(0,180),(65,150),(150,150),(150,180)]
 pointsdes1 = [(60,240),(60,0),(300,0),(300,240)]
@@ -82,17 +85,17 @@ for i in range(320):
     ROIlane=thresholded[140:240,i]
     ROIlane=ROIlane/255
     histogramlane[i]=np.sum(ROIlane)
-#print(histogramlane)
+print(histogramlane)
 leftpos=np.argmax(histogramlane[0:130])
-print(leftpos)
+print("leftpo=",leftpos)
 rightpos=np.argmax(histogramlane[320:170:-1])
-print(rightpos)               
+print("rightpos=",rightpos)               
 cv.line(thresholded,(leftpos,0),(leftpos,240),(0,255,0),2)
 cv.line(thresholded,(320-rightpos,0),(320-rightpos,240),(0,255,0),2)
 
 
 lanecenter=(320-rightpos+leftpos)//2
-print(lanecenter)
+print("lanecenter",lanecenter)
 cv.line(thresholded,(lanecenter,0),(lanecenter,240),(0,0,255),2)
 framecenter=160
 cv.line(thresholded,(framecenter,0),(framecenter,240),(255,0,0),2)
@@ -102,11 +105,11 @@ cv.resizeWindow("thresholded1", 640, 480)
 cv.imshow("thresholded1", thresholded)
 
 result=lanecenter-framecenter
-thresholded= cv.putText(thresholded,"{}".format(result),(0,50),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,255),2, cv.LINE_AA)
+imag= cv.putText(imag,"{}".format(result),(0,50),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,255),2, cv.LINE_AA)
 
-cv.namedWindow("thresholded1", cv.WINDOW_KEEPRATIO)
-cv.resizeWindow("thresholded1", 640, 480)
-cv.imshow("thresholded1", thresholded)
+cv.namedWindow("imag2", cv.WINDOW_KEEPRATIO)
+cv.resizeWindow("imag2", 640, 480)
+cv.imshow("imag2", imag)
 
 
         
