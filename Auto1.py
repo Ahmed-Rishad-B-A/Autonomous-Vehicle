@@ -21,7 +21,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
     cv.resizeWindow("imagewin2", 1280, 720)
     cv.imshow("imagewin2", image)
     key = cv.waitKey(1) & 0xFF
-    print(key)
+
     if key==ord('q'):
         cv.destroyWindow("imagewin2")
         break
