@@ -20,6 +20,7 @@ class Autonomous:
         self.CameraFrameRate = CameraFrameRate
         self.DisplayResolution = DisplayResolution
         self.motor = mc.Motor(fl,fr,bl,br)
+        self.Lane_Offset = 0
         
     def init_camera(self):
         
@@ -37,15 +38,15 @@ class Autonomous:
             #grab the raw NumPy array representing the image, then initialize the timestamp  # and occupied/unoccupied text
             self.Capture_Image = frame.array
             #image = cv.cvtColor(image, cv.COLOR_BGR2GRAY)
-            cv.namedWindow("imagewin2", cv.WINDOW_KEEPRATIO)
-            cv.resizeWindow("imagewin2",self.DisplayResolution[0],self.DisplayResolution[1])
-            cv.imshow("imagewin2", self.Capture_Image)
+#             cv.namedWindow("imagewin2", cv.WINDOW_KEEPRATIO)
+#             cv.resizeWindow("imagewin2",self.DisplayResolution[0],self.DisplayResolution[1])
+#             cv.imshow("imagewin2", self.Capture_Image)
             
             self.image_process()
             key = cv.waitKey(1) & 0xFF
 
             if key == ord('q'):
-                cv.destroyWindow("imagewin2")
+                #cv.destroyWindow("imagewin2")
                 break
              # clear the stream in preparation for the next frame
             self.rawCapture.truncate(0)
@@ -76,7 +77,7 @@ class Autonomous:
         cv.line(thresholded,(320-rightpos,0),(320-rightpos,240),(0,255,0),2)
         
         lanecenter = (320-rightpos+leftpos)//2
-        print("lanecenter",lanecenter)
+        #print("lanecenter",lanecenter)
         cv.line(thresholded,(lanecenter,0),(lanecenter,240),(0,0,255),2)
         framecenter = 160
         cv.line(thresholded,(framecenter,0),(framecenter,240),(255,0,0),2)
@@ -95,7 +96,7 @@ class Autonomous:
         imag=cv.resize(self.Capture_Image,(320,240) , interpolation = cv.INTER_AREA)
 
 
-        points1= [(0,180),(50,130),(270,130),(320,180)]
+        points1= [(0,220),(20,180),(300,180),(320,220)]
         pointsdes1 = [(0,240),(0,0),(320,0),(320,240)]
         points = np.float32(points1)
         pointsdes = np.float32( pointsdes1)
@@ -104,8 +105,8 @@ class Autonomous:
         self.draw_roi(imag,points1)
         matrix = cv.getPerspectiveTransform(points,pointsdes)
         result = cv.warpPerspective(imag, matrix, (320,240)) 
-        self.create_win("imagewin",imag)
-        self.create_win("perspective",result)
+#         self.create_win("imagewin",imag)
+#         self.create_win("perspective",result)
 
         result = cv.cvtColor(result, cv.COLOR_BGR2GRAY)
         #self.create_win("grayed",result)
@@ -119,9 +120,9 @@ class Autonomous:
         #cv.imshow("canny",edge)
 
         thresholded = cv.cvtColor(thresholded, cv.COLOR_GRAY2BGR)
-        Lane_Offset = self.lane_detection(histogramlane,thresholded) 
+        self.Lane_Offset = self.lane_detection(histogramlane,thresholded) 
         
-        imag = cv.putText(imag,"{}".format(Lane_Offset),(0,50),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,255),2, cv.LINE_AA)
+        imag = cv.putText(imag,"{}".format(self.Lane_Offset),(0,50),cv.FONT_HERSHEY_SIMPLEX,1,(255,0,255),2, cv.LINE_AA)
 
         self.create_win("imag2",imag)
         cv.waitKey(1)

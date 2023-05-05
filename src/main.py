@@ -13,11 +13,41 @@ def main():
         auto.init_camera()
         auto.capture_camera()
         
-        
     def thread2():
         
+#         motor.gui_init()
+        
+        while False:
+            #print(motor.stop_flag)
+            if(motor.stop_flag == False):
+                if auto.Lane_Offset > 2 and  auto.Lane_Offset <=10:
+                    motor.right1()
+                elif auto.Lane_Offset >10 and auto.Lane_Offset <=20:
+                    motor.right2()
+                elif auto.Lane_Offset >20:
+                    motor.right3()
+                elif auto.Lane_Offset >-10 and auto.Lane_Offset <=-2:
+                    motor.left1()
+                elif auto.Lane_Offset >-20 and auto.Lane_Offset <=-10:
+                    motor.left2()
+                elif auto.Lane_Offset <=-20:
+                    motor.left3()
+                else:
+                    motor.forward()
+            
+                    
+        
+    def thread3():
         motor.gui_init()
-    
+        
+    def thread4():
+        
+        timer = 0
+        while True:
+            print("LOG(",timer,") : [ VEHICLE STATUS =",motor.status,"] [ Lane error= ",auto.Lane_Offset,"]")
+            time.sleep(0.1)
+            timer = timer + 100
+        
     Camera_resolution = (320,240)
     Frame_rate = 32
     Display_resolution = (1280,720)
@@ -26,9 +56,17 @@ def main():
     motor = Motor.Motor_driver()
     Thread1 = threading.Thread(target = thread1)
     Thread2 = threading.Thread(target = thread2)
+    Thread3 = threading.Thread(target = thread3)
+    Thread4 = threading.Thread(target = thread4)
     
     Thread1.start()
     Thread2.start()
+    Thread3.start()
+    Thread4.start()
+    
+
+
+        
     
     
         #     imag=cv.imread("road.jpg")
