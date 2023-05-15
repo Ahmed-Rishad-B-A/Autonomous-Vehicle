@@ -17,20 +17,21 @@ def main():
         
 #         motor.gui_init()
         
-        while False:
+        while True:
             #print(motor.stop_flag)
             if(motor.stop_flag == False):
-                if auto.Lane_Offset > 2 and  auto.Lane_Offset <=10:
-                    motor.right1()
-                elif auto.Lane_Offset >10 and auto.Lane_Offset <=20:
+                if auto.Lane_Offset > 15 and  auto.Lane_Offset <=30:
                     motor.right2()
-                elif auto.Lane_Offset >20:
+
+                elif auto.Lane_Offset >30 and auto.Lane_Offset <=60:
+                    motor.right2()
+                elif auto.Lane_Offset >60:
                     motor.right3()
-                elif auto.Lane_Offset >-10 and auto.Lane_Offset <=-2:
+                elif auto.Lane_Offset >-30 and auto.Lane_Offset <=-15:
                     motor.left1()
-                elif auto.Lane_Offset >-20 and auto.Lane_Offset <=-10:
+                elif auto.Lane_Offset >-60 and auto.Lane_Offset <=-30:
                     motor.left2()
-                elif auto.Lane_Offset <=-20:
+                elif auto.Lane_Offset <=-60:
                     motor.left3()
                 else:
                     motor.forward()
